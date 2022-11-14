@@ -1,4 +1,10 @@
-import { IsDate, IsIn, IsNotEmpty, IsNumber } from 'class-validator';
+import {
+  IsDate,
+  IsIn,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class Transaction {
   @IsIn([1, 2, 3, 4], { message: 'invalid type' })
@@ -11,4 +17,15 @@ export class Transaction {
   amount: number;
   @IsNotEmpty({ message: 'seller is required' })
   seller: string;
+}
+
+export class FindAllReq {
+  @IsOptional()
+  @IsIn(['1', '2'], {})
+  group?: string;
+}
+
+export class FindAllRes {
+  transactions: Transaction[];
+  total: any;
 }

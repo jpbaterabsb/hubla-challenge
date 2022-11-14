@@ -1,14 +1,18 @@
 import {
   Controller,
+  Get,
   HttpStatus,
   ParseFilePipeBuilder,
   Post,
+  Query,
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes, ApiBody } from '@nestjs/swagger';
+import { ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionService } from './transaction.service';
+
+import { FindAllReq } from './types';
 
 @Controller('transaction')
 export class TransactionController {
@@ -28,7 +32,7 @@ export class TransactionController {
     },
   })
   @UseInterceptors(FileInterceptor('file'))
-  uploadFile(
+  create(
     @UploadedFile(
       new ParseFilePipeBuilder()
         .addFileTypeValidator({
@@ -45,5 +49,18 @@ export class TransactionController {
     file: Express.Multer.File,
   ) {
     return this.transactionService.create(file);
+  }
+
+  @Get()
+  @ApiQuery({
+    type: 'number',
+    name: 'group',
+    required: false,
+  })
+  findAll(
+    @Query()
+    query: FindAllReq,
+  ) {
+    return this.transactionService.findAll(Number(query.group));
   }
 }
