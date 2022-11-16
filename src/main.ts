@@ -3,11 +3,19 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { PrismaService } from './prisma.service';
+import { ConfigService } from '@nestjs/config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  const configService: ConfigService = app.get<ConfigService>(ConfigService);
 
   app.useGlobalPipes(new ValidationPipe());
+
+  app.enableCors({
+    allowedHeaders: '*',
+    origin: '*',
+    credentials: true,
+  });
 
   const prismaService = app.get(PrismaService);
 
@@ -21,7 +29,7 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-
-  await app.listen(3000);
+  const port = configService.get('PORT');
+  await app.listen(port || 3000);
 }
 bootstrap();

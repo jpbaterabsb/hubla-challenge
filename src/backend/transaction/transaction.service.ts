@@ -25,7 +25,7 @@ export class TransactionService {
     };
   }
 
-  async findAll(groupId?: number): Promise<FindAllRes> {
+  async findAll(groupId?: number, page = 1, size = 10): Promise<FindAllRes> {
     let where: any = {};
 
     if (groupId) {
@@ -35,6 +35,11 @@ export class TransactionService {
     }
 
     const transactions = await this.prisma.transaction.findMany({
+      include: {
+        transactionType: true,
+      },
+      skip: (page - 1) * size,
+      take: size,
       where,
     });
     const total = await this.prisma.transaction.aggregate({

@@ -14,7 +14,7 @@ import { TransactionService } from './transaction.service';
 
 import { FindAllReq } from './types';
 
-@Controller('transaction')
+@Controller('transactions')
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}
 

@@ -7,15 +7,15 @@ import {
 } from 'class-validator';
 
 export class Transaction {
-  @IsIn([1, 2, 3, 4], { message: 'invalid type' })
+  @IsIn([1, 2, 3, 4], { message: 'tipo inválido' })
   type: number;
-  @IsDate({ message: 'invalid date' })
+  @IsDate({ message: 'data inválida' })
   date: Date;
-  @IsNotEmpty({ message: 'product is required' })
+  @IsNotEmpty({ message: 'produto inválido' })
   product: string;
-  @IsNumber({}, { message: 'invalid amount' })
+  @IsNumber({}, { message: 'valor inválido' })
   amount: number;
-  @IsNotEmpty({ message: 'seller is required' })
+  @IsNotEmpty({ message: 'vendedor inválido' })
   seller: string;
 }
 
