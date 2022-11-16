@@ -64,13 +64,11 @@ describe('TransactionService', () => {
       lines,
     );
 
-    expect(errorByLine['1'][0].constraints.isDate).toBe('invalid date');
-    expect(errorByLine['2'][0].constraints.isNotEmpty).toBe(
-      'product is required',
-    );
-    expect(errorByLine['3'][0].constraints.isNumber).toBe('invalid amount');
-    expect(errorByLine['4'][0].constraints.line).toBe('is less than 67');
-    expect(errorByLine['5'][0].constraints.isIn).toBe('invalid type');
+    expect(errorByLine['1'][0].constraints.isDate).toBe('data inválida');
+    expect(errorByLine['2'][0].constraints.isNotEmpty).toBe('produto inválido');
+    expect(errorByLine['3'][0].constraints.isNumber).toBe('valor inválido');
+    expect(errorByLine['4'][0].constraints.line).toBe('é menor do que 67');
+    expect(errorByLine['5'][0].constraints.isIn).toBe('tipo inválido');
     expect(transactions.length).toBe(15);
   });
 });

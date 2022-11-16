@@ -25,7 +25,7 @@ export class TransactionService {
     };
   }
 
-  async findAll(groupId?: number, page = 1, size = 10): Promise<FindAllRes> {
+  async findAll(groupId?: number): Promise<FindAllRes> {
     let where: any = {};
 
     if (groupId) {
@@ -38,8 +38,6 @@ export class TransactionService {
       include: {
         transactionType: true,
       },
-      skip: (page - 1) * size,
-      take: size,
       where,
     });
     const total = await this.prisma.transaction.aggregate({
@@ -92,7 +90,7 @@ export class TransactionService {
     return [
       {
         property: 'line',
-        constraints: { line: `is less than ${MINIMUM_LINE_LENGTH}` },
+        constraints: { line: `é menor do que ${MINIMUM_LINE_LENGTH}` },
       },
     ];
   }
@@ -112,7 +110,7 @@ export class TransactionService {
     const dataAsString = file.toString('utf8');
 
     if (!dataAsString) {
-      throw new HttpException('File is empty', HttpStatus.BAD_REQUEST);
+      throw new HttpException('O arquivo esta vazio', HttpStatus.BAD_REQUEST);
     }
 
     return dataAsString.split('\n').filter((line) => line);
