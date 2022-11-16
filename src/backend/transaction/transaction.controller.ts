@@ -8,12 +8,13 @@ import {
   UploadedFile,
   UseInterceptors,
 } from '@nestjs/common';
-import { ApiConsumes, ApiBody, ApiQuery } from '@nestjs/swagger';
+import { ApiConsumes, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionService } from './transaction.service';
 
 import { FindAllReq } from './types';
 
+@ApiTags('transactions')
 @Controller('transactions')
 export class TransactionController {
   constructor(private transactionService: TransactionService) {}

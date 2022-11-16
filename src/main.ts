@@ -25,7 +25,6 @@ async function bootstrap() {
     .setTitle('Hubla API')
     .setDescription('Backend for hubla challenge')
     .setVersion('1.0')
-    .addTag('hubla')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
