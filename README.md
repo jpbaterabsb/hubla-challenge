@@ -14,7 +14,7 @@ The goal of this application are to register transactions by single file applica
 1. Clone this repository
 2. Then, run the below command in source folder of this repository:
 ```shell
-npm install:all
+npm run install:all
 ```
 
 ## ☕ Run the application
@@ -31,7 +31,7 @@ docker-compose up
 1. Run the below command in source folder of this repository:
 
 ```shell
-npm test:all
+npm run test:all
 ```
 
 ## Notes
