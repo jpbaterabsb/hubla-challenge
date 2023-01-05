@@ -1,0 +1,1126 @@
+Subject: [PATCH] finish list transaction
+---
+Index: .env
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.env b/.env
+--- a/.env	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/.env	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -4,4 +4,5 @@
+ # Prisma supports the native connection string format for PostgreSQL, MySQL, SQLite, SQL Server, MongoDB and CockroachDB.
+ # See the documentation for all the connection string options: https://pris.ly/d/connection-strings
+ 
+-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/hubla_db?schema=public"
+\ No newline at end of file
++DATABASE_URL="postgresql://postgres:postgres@localhost:5432/hubla_db?schema=public"
++PORT=3333
+\ No newline at end of file
+Index: front/package.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/package.json b/front/package.json
+--- a/front/package.json	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/package.json	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -10,6 +10,7 @@
+         "@types/node": "^16.7.13",
+         "@types/react": "^18.0.0",
+         "@types/react-dom": "^18.0.0",
++        "axios": "^1.1.3",
+         "flowbite": "^1.5.3",
+         "flowbite-react": "^0.3.4",
+         "localforage": "^1.10.0",
+@@ -18,6 +19,7 @@
+         "react-dom": "^18.2.0",
+         "react-router-dom": "^6.4.3",
+         "react-scripts": "5.0.1",
++        "react-toastify": "^9.1.1",
+         "sort-by": "^1.2.0",
+         "typescript": "^4.4.2",
+         "web-vitals": "^2.1.0"
+Index: front/public/index.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/public/index.html b/front/public/index.html
+--- a/front/public/index.html	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/public/index.html	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -1,43 +1,20 @@
+ <!DOCTYPE html>
+ <html lang="en">
+-  <head>
++
++<head>
+     <meta charset="utf-8" />
+     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+     <meta name="viewport" content="width=device-width, initial-scale=1" />
+     <meta name="theme-color" content="#000000" />
+-    <meta
+-      name="description"
+-      content="Web site created using create-react-app"
+-    />
++    <meta name="description" content="Web site created using create-react-app" />
+     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+-    <!--
+-      manifest.json provides metadata used when your web app is installed on a
+-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
+-    -->
+     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+-    <!--
+-      Notice the use of %PUBLIC_URL% in the tags above.
+-      It will be replaced with the URL of the `public` folder during the build.
+-      Only files inside the `public` folder can be referenced from the HTML.
+-
+-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
+-      work correctly both with client-side routing and a non-root public URL.
+-      Learn how to configure a non-root public URL by running `npm run build`.
+-    -->
+-    <title>React App</title>
+-  </head>
+-  <body>
++    <title>Hubla Challenge</title>
++</head>
++
++<body>
+     <noscript>You need to enable JavaScript to run this app.</noscript>
+     <div id="root"></div>
+-    <!--
+-      This HTML file is a template.
+-      If you open it directly in the browser, you will see an empty page.
+-
+-      You can add webfonts, meta tags, or analytics to this file.
+-      The build step will place the bundled scripts into the <body> tag.
+-
+-      To begin the development, run `npm start` or `yarn start`.
+-      To create a production bundle, use `npm run build` or `yarn build`.
+-    -->
+-  </body>
+-</html>
++</body>
++
++</html>
+\ No newline at end of file
+Index: front/src/App.css
+===================================================================
+diff --git a/front/src/App.css b/front/src/App.css
+deleted file mode 100644
+--- a/front/src/App.css	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ /dev/null	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
+@@ -1,38 +0,0 @@
+-.App {
+-  text-align: center;
+-}
+-
+-.App-logo {
+-  height: 40vmin;
+-  pointer-events: none;
+-}
+-
+-@media (prefers-reduced-motion: no-preference) {
+-  .App-logo {
+-    animation: App-logo-spin infinite 20s linear;
+-  }
+-}
+-
+-.App-header {
+-  background-color: #282c34;
+-  min-height: 100vh;
+-  display: flex;
+-  flex-direction: column;
+-  align-items: center;
+-  justify-content: center;
+-  font-size: calc(10px + 2vmin);
+-  color: white;
+-}
+-
+-.App-link {
+-  color: #61dafb;
+-}
+-
+-@keyframes App-logo-spin {
+-  from {
+-    transform: rotate(0deg);
+-  }
+-  to {
+-    transform: rotate(360deg);
+-  }
+-}
+Index: front/src/App.test.tsx
+===================================================================
+diff --git a/front/src/App.test.tsx b/front/src/App.test.tsx
+deleted file mode 100644
+--- a/front/src/App.test.tsx	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ /dev/null	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
+@@ -1,9 +0,0 @@
+-import React from 'react';
+-import { render, screen } from '@testing-library/react';
+-import App from './App';
+-
+-test('renders learn react link', () => {
+-  render(<App />);
+-  const linkElement = screen.getByText(/learn react/i);
+-  expect(linkElement).toBeInTheDocument();
+-});
+Index: front/src/App.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/App.tsx b/front/src/App.tsx
+--- a/front/src/App.tsx	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/src/App.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -1,6 +1,12 @@
+ import { Router } from './router';
++import 'react-toastify/dist/ReactToastify.css';
++import { ToastContainer } from 'react-toastify';
++
+ function App() {
+-  return (<Router/>)
++  return (<>
++  <Router/>
++  <ToastContainer />
++  </>)
+ }
+ 
+ export default App;
+Index: front/src/components/Dropzone.test.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/Dropzone.test.tsx b/front/src/components/Dropzone.test.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/Dropzone.test.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,15 @@
++import { render, screen } from "@testing-library/react";
++import { Dropzone } from "./Dropzone";
++
++describe('Dropzone.tsx', () => {
++    it("render without value", () => {
++        render(<Dropzone onChangeFile={() => {}} value={null} />);
++        expect(screen.getByTestId('drag-and-drop-text')).toHaveTextContent('Click para fazer upload');
++    });
++    
++    it("render with value", () => {
++        const file = new File([], 'test');
++        render(<Dropzone onChangeFile={() => {}} value={file} />);
++        expect(screen.getByTestId('file-name')).toHaveTextContent(file.name);
++    });
++});
+\ No newline at end of file
+Index: front/src/components/Dropzone.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/Dropzone.tsx b/front/src/components/Dropzone.tsx
+--- a/front/src/components/Dropzone.tsx	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/src/components/Dropzone.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -1,23 +1,23 @@
+ import { ReactComponent as CheckSVG } from '../assets/check.svg'
+ type Props = {
+-    onChangeFile: (file: File | null) => void;
+-    value: File |null;
+-  }
+-  
+-export const Dropzone: React.FC<Props> = ({ value, onChangeFile}) => {
+-    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+-      if (e?.target?.files) {
+-        onChangeFile(e.target.files[0]);
+-      }
+-    }
+-  
+-    const clear = () => {
+-      onChangeFile(null);
+-    }
+-  
+-    return value ?
+-      (
+-        <>
++  onChangeFile: (file: File | null) => void;
++  value: File | null;
++}
++
++export const Dropzone: React.FC<Props> = ({ value, onChangeFile }) => {
++  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
++    if (e?.target?.files) {
++      onChangeFile(e.target.files[0]);
++    }
++  }
++
++  const clear = () => {
++    onChangeFile(null);
++  }
++
++  return value ?
++    (
++      <>
+         <div className="flex justify-center items-center w-6/12 mx-auto">
+           <div className='flex flex-col w-48 h-48 rounded border-dashed border-2 bg-white'>
+             <div className='flex justify-end pr-2 pt-1 cursor-pointer' onClick={clear}>
+@@ -25,26 +25,26 @@
+             </div>
+             <div className='flex flex-1 flex-col justify-center items-center'>
+               <CheckSVG className='w-8 h-8 mb-8' />
+-              <span className='text-gray-400 text-sm'>{value?.name}</span>
++              <span data-testid='file-name' className='text-gray-400 text-sm'>{value?.name}</span>
+             </div>
+           </div>
+         </div>
+-        </>
+-      ) :
+-      (
+-        <>
+-          <div className="flex justify-center items-center w-6/12 mx-auto">
+-            <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
+-              <div className="flex flex-col justify-center items-center pt-5 pb-6">
+-                <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
+-                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click to upload</span> or drag and drop</p>
+-                <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
+-                <input id="dropzone-file" onChange={onChange} type="file" className="hidden" />
+-              </div>
+-            </label>
+-          </div>
+-        </>
+-      )
+-  
+-  
+-  }
+\ No newline at end of file
++      </>
++    ) :
++    (
++      <>
++        <div className="flex justify-center items-center w-6/12 mx-auto">
++          <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
++            <div className="flex flex-col justify-center items-center pt-5 pb-6">
++              <svg aria-hidden="true" className="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path></svg>
++              <p data-testid='drag-and-drop-text' className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click para fazer upload</span> ou arraste e solte.</p>
++              <p className="text-xs text-gray-500 dark:text-gray-400">.TXT</p>
++              <input accept=".txt" id="dropzone-file" onChange={onChange} type="file" className="hidden" />
++            </div>
++          </label>
++        </div>
++      </>
++    )
++
++
++}
+\ No newline at end of file
+Index: front/src/components/ErrorGroup.test.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/ErrorGroup.test.tsx b/front/src/components/ErrorGroup.test.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/ErrorGroup.test.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,42 @@
++import { fireEvent, render, screen } from "@testing-library/react";
++import { ErrorByLine } from "../types";
++import { ErrorGroup } from "./ErrorGroup";
++
++const errorByLine: ErrorByLine = {
++    "1": [
++        {
++            "constraints": {
++                "isDate": "data inválida"
++            }
++        },
++        {
++
++            "constraints": {
++                "isNumber": "valor inválido"
++            }
++        }
++    ]
++};
++
++describe('ErrorGroup.tsx', () => {
++    it("render without value", () => {
++        render(<ErrorGroup errors={null} setErrors={() => { }} />);
++        expect(screen.getByTestId('error-container')).toHaveClass('opacity-0');
++    });
++
++    it("render with value", () => {
++        render(<ErrorGroup errors={errorByLine} setErrors={() => { }} />);
++        expect(screen.getByTestId('error-container')).toHaveClass('opacity-100');
++        expect(screen.getByText(/Linha 1/i)).toBeInTheDocument();
++        expect(screen.getByText(/data inválida/i)).toBeInTheDocument();
++        expect(screen.getByText(/valor inválido/i)).toBeInTheDocument();
++    });
++
++    it("test close button", () => {
++        const closeRightSectionSpy = jest.fn();
++        render(<ErrorGroup errors={errorByLine} setErrors={closeRightSectionSpy} />);
++        expect(screen.getByTestId('error-container')).toHaveClass('opacity-100');
++        fireEvent.click(screen.getByTestId('close-button'));
++        expect(closeRightSectionSpy).toHaveBeenCalled();
++    });
++});
+\ No newline at end of file
+Index: front/src/components/ErrorGroup.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/ErrorGroup.tsx b/front/src/components/ErrorGroup.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/ErrorGroup.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,23 @@
++import { Dispatch, SetStateAction } from 'react';
++import { ErrorByLine } from '../types';
++
++
++
++export function ErrorGroup(props: { errors: ErrorByLine | null | undefined, setErrors: Dispatch<SetStateAction<ErrorByLine | null | undefined>> }) {
++    return (<div data-testid="error-container" className={`bg-red-600 my-5 p-5 rounded-xl transition-all duration-300 ${props.errors ? 'opacity-100' : 'opacity-0'}`}>
++        {props.errors && (
++            <>
++                <span data-testid='close-button' className="flex flex-1 justify-end cursor-pointer text-xl hover:bg-red" onClick={() => props.setErrors(null)}>&times;</span>
++                <ul className="space-y-4 list-inside  text-gray-800">
++                    {props.errors && Object.entries(props.errors).map(([line, error]) => <li key={line}>
++                        {`Linha ${line}`}
++                        {error.flatMap(e => Object.values(e.constraints)).map(m => <ul key={m} className="pl-5 mt-2 space-y-1 list-disc list-inside">
++                            <li>{m}</li>
++                        </ul>)}
++
++                    </li>)}
++                </ul>
++            </>
++        )}
++    </div>);
++}
+\ No newline at end of file
+Index: front/src/components/LocalTable.test.tsx
+===================================================================
+diff --git a/front/src/components/LocalTable.test.tsx b/front/src/components/LocalTable.test.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/LocalTable.test.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,32 @@
++import { render, screen } from "@testing-library/react";
++import { LocalTable } from "./LocalTable";
++
++
++const transactions = [
++    {
++      "id": 1,
++      "type": 2,
++      "date": "2022-01-16T17:13:54.000Z",
++      "product": "CURSO DE BEM-ESTAR",
++      "amount": 12750,
++      "seller": "THIAGO OLIVEIRA",
++      "transactionType": {
++        "id": 2,
++        "description": "Venda afiliado",
++        "type": "IN"
++      }  
++    }
++];
++
++describe('LocalTable.tsx', () => {
++    it("render without value", () => {
++        render(<LocalTable  transactions={[]}/>);
++        expect(screen.getByText(/Não há transações para serem apresentadas/i)).toBeInTheDocument();
++    });
++
++    it("render with value", () => {
++        render(<LocalTable transactions={transactions} />);
++        expect(screen.getByTestId('row1')).toBeInTheDocument();
++        expect(screen.queryByTestId('row2')).not.toBeInTheDocument();
++    });
++});
+\ No newline at end of file
+Index: front/src/components/LocalTable.tsx
+===================================================================
+diff --git a/front/src/components/LocalTable.tsx b/front/src/components/LocalTable.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/LocalTable.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,71 @@
++import { Table } from "flowbite-react";
++import { Transaction } from "../types";
++import { formatBRL } from "../utils";
++
++export interface LocalTableProps {
++    transactions: Transaction[];
++}
++
++const formatedTransactionType: Record<string, string> = {
++    IN: 'Entrada',
++    OUT: 'Saída'
++};
++
++export const LocalTable: React.FC<LocalTableProps> = ({ transactions }) => {
++    return <Table>
++        <Table.Head>
++            <Table.HeadCell>
++                Tipo de Transação
++            </Table.HeadCell>
++            <Table.HeadCell>
++                Natureza
++            </Table.HeadCell>
++            <Table.HeadCell>
++                Data
++            </Table.HeadCell>
++            <Table.HeadCell>
++                Produto
++            </Table.HeadCell>
++            <Table.HeadCell>
++                Valor
++            </Table.HeadCell>
++            <Table.HeadCell>
++                Vendedor
++            </Table.HeadCell>
++        </Table.Head>
++        <Table.Body className="divide-y">
++            {transactions.length > 0 ? transactions.map(t =>
++            (
++                <Table.Row data-testid={`row${t.id}`} key={t.id} className="bg-white dark:border-gray-700 dark:bg-gray-800">
++                    <Table.Cell>
++                        {t.transactionType.description}
++                    </Table.Cell>
++                    <Table.Cell>
++                        {formatedTransactionType[t.transactionType.type]}
++                    </Table.Cell>
++                    <Table.Cell>
++                        {new Date(t.date).toLocaleString('pt-BR')}
++                    </Table.Cell>
++                    <Table.Cell>
++                        {t.product}
++                    </Table.Cell>
++                    <Table.Cell>
++                        {formatBRL(t.amount)}
++                    </Table.Cell>
++                    <Table.Cell>
++                        {t.seller}
++                    </Table.Cell>
++                </Table.Row>
++            )
++            ) :
++                (
++                    <Table.Row className="bg-white dark:border-gray-700 dark:bg-gray-800">
++                        <Table.Cell>
++                            Não há transações para serem apresentadas
++                        </Table.Cell>
++                    </Table.Row>
++                )
++            }
++        </Table.Body>
++    </Table >
++}
+Index: front/src/components/NavigationButton.test.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/NavigationButton.test.tsx b/front/src/components/NavigationButton.test.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/NavigationButton.test.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,16 @@
++import { fireEvent, render, screen } from "@testing-library/react";
++import { NavigationButton } from "./NavigationButton";
++import * as router from 'react-router'
++
++const navigate = jest.fn()
++
++
++describe('LocalTable.tsx', () => {
++    it("render without value", () => {
++        jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
++        render(<NavigationButton  label="test" to="/home"/>);
++        expect(screen.getByText(/test/i)).toBeInTheDocument();
++        fireEvent.click(screen.getByTestId('main-button'));
++        expect(navigate).toHaveBeenCalledWith('/home');
++    });
++});
+\ No newline at end of file
+Index: front/src/components/NavigationButton.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/NavigationButton.tsx b/front/src/components/NavigationButton.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/NavigationButton.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,16 @@
++import { Button } from "flowbite-react";
++import { useNavigate } from "react-router-dom";
++
++type NavigationButtonProps = {
++    to: string;
++    label: string;
++}
++
++export function NavigationButton({to, label}: NavigationButtonProps) {
++    const navigate  = useNavigate();
++    return (<div className='flex justify-end pr-5 py-5'>
++        <Button data-testid="main-button" onClick={() => navigate(to)}>
++            {label}
++        </Button>
++    </div>);
++}
+Index: front/src/components/SelectGroup.test.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/SelectGroup.test.tsx b/front/src/components/SelectGroup.test.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/SelectGroup.test.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,15 @@
++import { fireEvent, render, screen } from "@testing-library/react";
++import { SelectGroup } from "./SelectGroup";
++
++
++describe('SelectGroup.tsx', () => {
++    it("render without value", () => {
++        const mocked = jest.fn();
++        render(<SelectGroup  onChange={mocked} />);
++        fireEvent.change(screen.getByTestId('groups'), { target: { value: 2 } });
++        let options: any[] = screen.getAllByTestId('select-option')
++        expect(options[0].selected).toBeFalsy();
++        expect(options[1].selected).toBeTruthy();
++        expect(options[2].selected).toBeFalsy();
++    });
++});
+\ No newline at end of file
+Index: front/src/components/SelectGroup.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/components/SelectGroup.tsx b/front/src/components/SelectGroup.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/components/SelectGroup.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,38 @@
++import { Label, Select } from 'flowbite-react';
++import React from 'react';
++import { GROUPS } from '../types';
++
++// import { Container } from './styles';
++
++
++type SelectGroupProps = {
++    onChange: (group: number) => void;
++}
++
++export function SelectGroup({ onChange }: SelectGroupProps) {
++    return (
++
++        <div id="select">
++            <div className="block">
++                <Label
++                    htmlFor="countries"
++                    value="Select your country"
++                />
++            </div>
++            <div className="w-4/12 mb-8 mt-2">
++
++                <Select id="groups" data-testid="groups" required={true} onChange={e => onChange(Number(e.target.value))}>
++                    <option data-testid="select-option" value={GROUPS.PRODUTOR}>
++                        Produtor
++                    </option>
++                    <option data-testid="select-option" value={GROUPS.AFILIADO}>
++                        Afiliado
++                    </option>
++                    <option data-testid="select-option" value={GROUPS.NENHUM}>
++                        Nenhum
++                    </option>
++                </Select>
++            </div>
++        </div>
++    );
++}
+\ No newline at end of file
+Index: front/src/configurations/rest.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/configurations/rest.tsx b/front/src/configurations/rest.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/configurations/rest.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,7 @@
++import axios from 'axios';
++
++
++axios.defaults.baseURL =  'http://localhost:3333';
++// axios.defaults.withCredentials = false;
++
++export const rest = axios;
+\ No newline at end of file
+Index: front/src/logo.svg
+===================================================================
+diff --git a/front/src/logo.svg b/front/src/logo.svg
+deleted file mode 100644
+--- a/front/src/logo.svg	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ /dev/null	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
+@@ -1,1 +0,0 @@
+-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 841.9 595.3"><g fill="#61DAFB"><path d="M666.3 296.5c0-32.5-40.7-63.3-103.1-82.4 14.4-63.6 8-114.2-20.2-130.4-6.5-3.8-14.1-5.6-22.4-5.6v22.3c4.6 0 8.3.9 11.4 2.6 13.6 7.8 19.5 37.5 14.9 75.7-1.1 9.4-2.9 19.3-5.1 29.4-19.6-4.8-41-8.5-63.5-10.9-13.5-18.5-27.5-35.3-41.6-50 32.6-30.3 63.2-46.9 84-46.9V78c-27.5 0-63.5 19.6-99.9 53.6-36.4-33.8-72.4-53.2-99.9-53.2v22.3c20.7 0 51.4 16.5 84 46.6-14 14.7-28 31.4-41.3 49.9-22.6 2.4-44 6.1-63.6 11-2.3-10-4-19.7-5.2-29-4.7-38.2 1.1-67.9 14.6-75.8 3-1.8 6.9-2.6 11.5-2.6V78.5c-8.4 0-16 1.8-22.6 5.6-28.1 16.2-34.4 66.7-19.9 130.1-62.2 19.2-102.7 49.9-102.7 82.3 0 32.5 40.7 63.3 103.1 82.4-14.4 63.6-8 114.2 20.2 130.4 6.5 3.8 14.1 5.6 22.5 5.6 27.5 0 63.5-19.6 99.9-53.6 36.4 33.8 72.4 53.2 99.9 53.2 8.4 0 16-1.8 22.6-5.6 28.1-16.2 34.4-66.7 19.9-130.1 62-19.1 102.5-49.9 102.5-82.3zm-130.2-66.7c-3.7 12.9-8.3 26.2-13.5 39.5-4.1-8-8.4-16-13.1-24-4.6-8-9.5-15.8-14.4-23.4 14.2 2.1 27.9 4.7 41 7.9zm-45.8 106.5c-7.8 13.5-15.8 26.3-24.1 38.2-14.9 1.3-30 2-45.2 2-15.1 0-30.2-.7-45-1.9-8.3-11.9-16.4-24.6-24.2-38-7.6-13.1-14.5-26.4-20.8-39.8 6.2-13.4 13.2-26.8 20.7-39.9 7.8-13.5 15.8-26.3 24.1-38.2 14.9-1.3 30-2 45.2-2 15.1 0 30.2.7 45 1.9 8.3 11.9 16.4 24.6 24.2 38 7.6 13.1 14.5 26.4 20.8 39.8-6.3 13.4-13.2 26.8-20.7 39.9zm32.3-13c5.4 13.4 10 26.8 13.8 39.8-13.1 3.2-26.9 5.9-41.2 8 4.9-7.7 9.8-15.6 14.4-23.7 4.6-8 8.9-16.1 13-24.1zM421.2 430c-9.3-9.6-18.6-20.3-27.8-32 9 .4 18.2.7 27.5.7 9.4 0 18.7-.2 27.8-.7-9 11.7-18.3 22.4-27.5 32zm-74.4-58.9c-14.2-2.1-27.9-4.7-41-7.9 3.7-12.9 8.3-26.2 13.5-39.5 4.1 8 8.4 16 13.1 24 4.7 8 9.5 15.8 14.4 23.4zM420.7 163c9.3 9.6 18.6 20.3 27.8 32-9-.4-18.2-.7-27.5-.7-9.4 0-18.7.2-27.8.7 9-11.7 18.3-22.4 27.5-32zm-74 58.9c-4.9 7.7-9.8 15.6-14.4 23.7-4.6 8-8.9 16-13 24-5.4-13.4-10-26.8-13.8-39.8 13.1-3.1 26.9-5.8 41.2-7.9zm-90.5 125.2c-35.4-15.1-58.3-34.9-58.3-50.6 0-15.7 22.9-35.6 58.3-50.6 8.6-3.7 18-7 27.7-10.1 5.7 19.6 13.2 40 22.5 60.9-9.2 20.8-16.6 41.1-22.2 60.6-9.9-3.1-19.3-6.5-28-10.2zM310 490c-13.6-7.8-19.5-37.5-14.9-75.7 1.1-9.4 2.9-19.3 5.1-29.4 19.6 4.8 41 8.5 63.5 10.9 13.5 18.5 27.5 35.3 41.6 50-32.6 30.3-63.2 46.9-84 46.9-4.5-.1-8.3-1-11.3-2.7zm237.2-76.2c4.7 38.2-1.1 67.9-14.6 75.8-3 1.8-6.9 2.6-11.5 2.6-20.7 0-51.4-16.5-84-46.6 14-14.7 28-31.4 41.3-49.9 22.6-2.4 44-6.1 63.6-11 2.3 10.1 4.1 19.8 5.2 29.1zm38.5-66.7c-8.6 3.7-18 7-27.7 10.1-5.7-19.6-13.2-40-22.5-60.9 9.2-20.8 16.6-41.1 22.2-60.6 9.9 3.1 19.3 6.5 28.1 10.2 35.4 15.1 58.3 34.9 58.3 50.6-.1 15.7-23 35.6-58.4 50.6zM320.8 78.4z"/><circle cx="420.9" cy="296.5" r="45.7"/><path d="M520.5 78.1z"/></g></svg>
+\ No newline at end of file
+Index: front/src/pages/Home.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/pages/Home.tsx b/front/src/pages/Home.tsx
+--- a/front/src/pages/Home.tsx	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/src/pages/Home.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -1,19 +1,49 @@
+ import { Button } from 'flowbite-react';
+ import React, { useState } from 'react';
++import { toast } from 'react-toastify';
+ import { Dropzone } from '../components/Dropzone';
++import { ErrorGroup } from '../components/ErrorGroup';
++import { NavigationButton } from '../components/NavigationButton';
++import { registerTransactions } from '../services/transactions.service';
++import { ErrorByLine } from '../types';
++
++type TnasactionCreateResponse = {
++    created: number;
++    errors: ErrorByLine;
++};
++
+ 
+ export const Home: React.FC = () => {
+-    const [file, setFile] = useState<File|null>(null);
+-    const submit = () => {}
+-  return (
+-    <div className='container mx-auto'>
+-    <h1 className='text-center text-5xl my-8'>Hubla challenge</h1>
+-    <Dropzone onChangeFile={setFile} value={file} />
++    const [file, setFile] = useState<File | null>(null);
++    const [errorMessages, setErrorMessages] = useState<ErrorByLine | null>();
++    const submit = async () => {
++        if (file) {
++            const { data } = await registerTransactions(file);
++            const {
++                errors,
++                created
++            }: TnasactionCreateResponse = data;
++            setErrorMessages(errors)
++            const numberOfErrors = Object.keys(errors).length;
++            if(created > 0) {
++                toast(`transações registradas: ${created}`, {theme: 'colored', type: 'success'});
++            }
++            if(numberOfErrors > 0) {
++                toast(`transações com erro: ${numberOfErrors}`, {theme: 'colored', type: 'error'});
++            }
++        }
++    }
++
++    return (
++        <div className='container mx-auto'>
++            <NavigationButton to='/transactions' label='Ver Transações' />
++            <h1 className='text-center text-5xl my-8'>Hubla challenge</h1>
++            <Dropzone onChangeFile={setFile} value={file} />
+ 
+-    <Button className='mt-5 mx-auto' onClick={submit}>
+-      Submeter transações
+-    </Button>
+-
+-  </div>
+-  );
++            <Button className='mt-5 mx-auto' onClick={submit}>
++                Submeter transações
++            </Button>
++            <ErrorGroup errors={errorMessages} setErrors={setErrorMessages}></ErrorGroup>
++        </div>
++    );
+ }
+\ No newline at end of file
+Index: front/src/pages/ListTransactions.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/pages/ListTransactions.tsx b/front/src/pages/ListTransactions.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/pages/ListTransactions.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,51 @@
++import { AxiosError } from 'axios';
++import React, { useEffect, useState } from 'react';
++import { toast } from 'react-toastify';
++import { LocalTable } from '../components/LocalTable';
++import { NavigationButton } from '../components/NavigationButton';
++import { SelectGroup } from '../components/SelectGroup';
++import { listTransactions } from '../services/transactions.service';
++import { GROUPS, Transaction } from '../types';
++import { formatBRL } from '../utils';
++
++export interface LisTransactionsData {
++    transactions: Transaction[];
++    total: number;
++}
++
++const ListTransactions: React.FC = () => {
++    const [transactions, setTransacitons] = useState<Transaction[]>([]);
++    const [total, setTotal] = useState<number>(0);
++    async function loadTransactions(group: GROUPS) {
++        try {
++            const { data } = await listTransactions(group);
++            console.log(data);
++            const { transactions, total } = data as LisTransactionsData;
++            setTransacitons(transactions);
++            setTotal(total);
++        } catch (e) {
++            if (e instanceof AxiosError) {
++                switch (e.status) {
++                    case 400: {
++                        toast(e.message)
++                        break;
++                    }
++                    default: toast('Serviço indisponível');
++                }
++            }
++        }
++    }
++    useEffect(() => {
++        loadTransactions(GROUPS.AFILIADO);
++    }, []);
++
++    return <div className="container mx-auto">
++        <NavigationButton to="/home" label='Registrar Transações' />
++        <SelectGroup onChange={(group) => loadTransactions(group)} />
++
++        <LocalTable transactions={transactions} />
++        {total && (<span className='flex justify-end pt-5 pr-8'>{`Total: ${formatBRL(total)}`}</span>)}
++    </div>;
++}
++
++export default ListTransactions;
+\ No newline at end of file
+Index: front/src/router.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/router.tsx b/front/src/router.tsx
+--- a/front/src/router.tsx	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/src/router.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -2,6 +2,7 @@
+     createBrowserRouter, RouterProvider,
+ } from "react-router-dom";
+ import { Home } from "./pages/Home";
++import ListTransactions from "./pages/ListTransactions";
+ 
+ export const router = createBrowserRouter([
+     {
+@@ -12,6 +13,10 @@
+         path: "/home",
+         element: <Home />,
+     },
++    {
++        path: "/transactions",
++        element: <ListTransactions />,
++    },
+ ]);
+ 
+ 
+Index: front/src/services/transactions.service.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/services/transactions.service.tsx b/front/src/services/transactions.service.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/services/transactions.service.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,17 @@
++import { rest } from "../configurations/rest";
++
++export const registerTransactions = (file: File) => {
++    const formData = new FormData();
++      formData.append('file', file);
++      return rest.post('/transactions', formData, {
++        headers: {
++            'Content-Type': 'multipart/form-data'
++        }
++      });
++}
++
++
++export const listTransactions = (group: number) => {
++    const query = group < 3 ? `?group=${group}` : '';
++      return rest.get(`/transactions${query}`);
++}
+\ No newline at end of file
+Index: front/src/types/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/types/index.tsx b/front/src/types/index.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/types/index.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,24 @@
++export enum GROUPS {
++    PRODUTOR = 1,
++    AFILIADO,
++    NENHUM
++}
++
++export interface TransactionType {
++    description: string;
++    type: string;
++    id: number;
++}
++
++export interface Transaction {
++    id: number;
++    type: number;
++    date: string;
++    product: string;
++    amount: number;
++    seller: string;
++    transactionType: TransactionType;
++}
++
++export type Error = { constraints: Record<string, string> };
++export type ErrorByLine = { [line: number]: Error[] };
+\ No newline at end of file
+Index: front/src/utils/index.tsx
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/src/utils/index.tsx b/front/src/utils/index.tsx
+new file mode 100644
+--- /dev/null	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
++++ b/front/src/utils/index.tsx	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -0,0 +1,3 @@
++export function formatBRL(value: number): string {
++    return (value/100).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
++}
+\ No newline at end of file
+Index: front/yarn.lock
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/front/yarn.lock b/front/yarn.lock
+--- a/front/yarn.lock	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/front/yarn.lock	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -2795,6 +2795,15 @@
+   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.5.2.tgz#823fdf491ff717ac3c58a52631d4206930c1d9f7"
+   integrity sha512-u2MVsXfew5HBvjsczCv+xlwdNnB1oQR9HlAcsejZttNjKKSkeDNVwB1vMThIUIFI9GoT57Vtk8iQLwqOfAkboA==
+ 
++axios@^1.1.3:
++  version "1.1.3"
++  resolved "https://registry.yarnpkg.com/axios/-/axios-1.1.3.tgz#8274250dada2edf53814ed7db644b9c2866c1e35"
++  integrity sha512-00tXVRwKx/FZr/IDVFt4C+f9FYairX517WoGCL6dpOntqLkZofjhu43F/Xl44UOpqa+9sLFDrG/XAnFsUYgkDA==
++  dependencies:
++    follow-redirects "^1.15.0"
++    form-data "^4.0.0"
++    proxy-from-env "^1.1.0"
++
+ axobject-query@^2.2.0:
+   version "2.2.0"
+   resolved "https://registry.yarnpkg.com/axobject-query/-/axobject-query-2.2.0.tgz#943d47e10c0b704aa42275e20edf3722648989be"
+@@ -3269,6 +3278,11 @@
+   resolved "https://registry.yarnpkg.com/clone/-/clone-1.0.4.tgz#da309cc263df15994c688ca902179ca3c7cd7c7e"
+   integrity sha512-JQHZ2QMW6l3aH/j6xCqQThY/9OH4D/9ls34cgkUBiEeocRTU04tHfKPBsUK1PqZCUQM7GiA0IIXJSuXHI64Kbg==
+ 
++clsx@^1.1.1:
++  version "1.2.1"
++  resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
++  integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
++
+ co@^4.6.0:
+   version "4.6.0"
+   resolved "https://registry.yarnpkg.com/co/-/co-4.6.0.tgz#6ea6bdf3d853ae54ccb8e47bfa0bf3f9031fb184"
+@@ -4785,7 +4799,7 @@
+     "@popperjs/core" "^2.9.3"
+     mini-svg-data-uri "^1.4.3"
+ 
+-follow-redirects@^1.0.0:
++follow-redirects@^1.0.0, follow-redirects@^1.15.0:
+   version "1.15.2"
+   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.2.tgz#b460864144ba63f2681096f274c4e57026da2c13"
+   integrity sha512-VQLG33o04KaQ8uYi2tVNbdrWp1QWxNNea+nmIB4EVM28v0hmP17z7aG1+wAkNzVq4KeXTq3221ye5qTJP91JwA==
+@@ -4824,6 +4838,15 @@
+     asynckit "^0.4.0"
+     combined-stream "^1.0.8"
+     mime-types "^2.1.12"
++
++form-data@^4.0.0:
++  version "4.0.0"
++  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.0.tgz#93919daeaf361ee529584b9b31664dc12c9fa452"
++  integrity sha512-ETEklSGi5t0QMZuiXoA/Q6vcnxcLQP5vdugSpuAyi6SVGi2clPPp+xgEhuMaHC+zGgn31Kd235W35f7Hykkaww==
++  dependencies:
++    asynckit "^0.4.0"
++    combined-stream "^1.0.8"
++    mime-types "^2.1.12"
+ 
+ forwarded@0.2.0:
+   version "0.2.0"
+@@ -7823,6 +7846,11 @@
+     forwarded "0.2.0"
+     ipaddr.js "1.9.1"
+ 
++proxy-from-env@^1.1.0:
++  version "1.1.0"
++  resolved "https://registry.yarnpkg.com/proxy-from-env/-/proxy-from-env-1.1.0.tgz#e102f16ca355424865755d2c9e8ea4f24d58c3e2"
++  integrity sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==
++
+ psl@^1.1.33:
+   version "1.9.0"
+   resolved "https://registry.yarnpkg.com/psl/-/psl-1.9.0.tgz#d0df2a137f00794565fcaf3b2c00cd09f8d5a5a7"
+@@ -8048,6 +8076,13 @@
+   optionalDependencies:
+     fsevents "^2.3.2"
+ 
++react-toastify@^9.1.1:
++  version "9.1.1"
++  resolved "https://registry.yarnpkg.com/react-toastify/-/react-toastify-9.1.1.tgz#9280caea4a13dc1739c350d90660a630807bf10b"
++  integrity sha512-pkFCla1z3ve045qvjEmn2xOJOy4ZciwRXm1oMPULVkELi5aJdHCN/FHnuqXq8IwGDLB7PPk2/J6uP9D8ejuiRw==
++  dependencies:
++    clsx "^1.1.1"
++
+ react@^18.2.0:
+   version "18.2.0"
+   resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
+Index: src/backend/transaction/transaction.controller.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/backend/transaction/transaction.controller.ts b/src/backend/transaction/transaction.controller.ts
+--- a/src/backend/transaction/transaction.controller.ts	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/src/backend/transaction/transaction.controller.ts	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -14,7 +14,7 @@
+ 
+ import { FindAllReq } from './types';
+ 
+-@Controller('transaction')
++@Controller('transactions')
+ export class TransactionController {
+   constructor(private transactionService: TransactionService) {}
+ 
+Index: src/backend/transaction/transaction.service.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/backend/transaction/transaction.service.ts b/src/backend/transaction/transaction.service.ts
+--- a/src/backend/transaction/transaction.service.ts	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/src/backend/transaction/transaction.service.ts	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -25,7 +25,7 @@
+     };
+   }
+ 
+-  async findAll(groupId?: number): Promise<FindAllRes> {
++  async findAll(groupId?: number, page = 1, size = 10): Promise<FindAllRes> {
+     let where: any = {};
+ 
+     if (groupId) {
+@@ -35,6 +35,11 @@
+     }
+ 
+     const transactions = await this.prisma.transaction.findMany({
++      include: {
++        transactionType: true,
++      },
++      skip: (page - 1) * size,
++      take: size,
+       where,
+     });
+     const total = await this.prisma.transaction.aggregate({
+Index: src/backend/transaction/types.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/backend/transaction/types.ts b/src/backend/transaction/types.ts
+--- a/src/backend/transaction/types.ts	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/src/backend/transaction/types.ts	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -7,15 +7,15 @@
+ } from 'class-validator';
+ 
+ export class Transaction {
+-  @IsIn([1, 2, 3, 4], { message: 'invalid type' })
++  @IsIn([1, 2, 3, 4], { message: 'tipo inválido' })
+   type: number;
+-  @IsDate({ message: 'invalid date' })
++  @IsDate({ message: 'data inválida' })
+   date: Date;
+-  @IsNotEmpty({ message: 'product is required' })
++  @IsNotEmpty({ message: 'produto inválido' })
+   product: string;
+-  @IsNumber({}, { message: 'invalid amount' })
++  @IsNumber({}, { message: 'valor inválido' })
+   amount: number;
+-  @IsNotEmpty({ message: 'seller is required' })
++  @IsNotEmpty({ message: 'vendedor inválido' })
+   seller: string;
+ }
+ 
+Index: src/main.ts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main.ts b/src/main.ts
+--- a/src/main.ts	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/src/main.ts	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -3,12 +3,20 @@
+ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+ import { AppModule } from './app.module';
+ import { PrismaService } from './prisma.service';
++import { ConfigService } from '@nestjs/config';
+ 
+ async function bootstrap() {
+   const app = await NestFactory.create(AppModule);
++  const configService: ConfigService = app.get<ConfigService>(ConfigService);
+ 
+   app.useGlobalPipes(new ValidationPipe());
+ 
++  app.enableCors({
++    allowedHeaders: '*',
++    origin: '*',
++    credentials: true,
++  });
++
+   const prismaService = app.get(PrismaService);
+ 
+   await prismaService.enableShutdownHooks(app);
+@@ -21,7 +29,7 @@
+     .build();
+   const document = SwaggerModule.createDocument(app, config);
+   SwaggerModule.setup('api', app, document);
+-
+-  await app.listen(3000);
++  const port = configService.get('PORT');
++  await app.listen(port || 3000);
+ }
+ bootstrap();
+Index: tsconfig.build.json
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/tsconfig.build.json b/tsconfig.build.json
+--- a/tsconfig.build.json	(revision 8855a8a597ff4af0be921f6b6a2540f9e4423c00)
++++ b/tsconfig.build.json	(revision 1326c50a88700342cd640a44ba6af9620a8c3409)
+@@ -1,4 +1,4 @@
+ {
+   "extends": "./tsconfig.json",
+-  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
++  "exclude": ["node_modules", "test", "dist", "**/*spec.ts", "front"]
+ }

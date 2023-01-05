@@ -12,7 +12,7 @@ import { ApiConsumes, ApiBody, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { TransactionService } from './transaction.service';
 
-import { FindAllReq } from './types';
+import { GetAllTransactionsParams, GetAllTransactionsResponse } from './types';
 
 @ApiTags('transactions')
 @Controller('transactions')
@@ -58,10 +58,10 @@ export class TransactionController {
     name: 'group',
     required: false,
   })
-  findAll(
+  getAllTransactions(
     @Query()
-    query: FindAllReq,
-  ) {
+    query: GetAllTransactionsParams,
+  ): Promise<GetAllTransactionsResponse> {
     return this.transactionService.findAll(Number(query.group));
   }
 }

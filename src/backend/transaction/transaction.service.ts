@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Transaction, FindAllRes } from './types';
+import { Transaction, GetAllTransactionsResponse } from './types';
 import { validate, ValidationError } from 'class-validator';
 import { PrismaService } from 'src/prisma.service';
 const MINIMUM_LINE_LENGTH = 67;
@@ -25,7 +25,7 @@ export class TransactionService {
     };
   }
 
-  async findAll(groupId?: number): Promise<FindAllRes> {
+  async findAll(groupId?: number): Promise<GetAllTransactionsResponse> {
     let where: any = {};
 
     if (groupId) {

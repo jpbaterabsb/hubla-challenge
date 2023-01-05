@@ -1,22 +1,22 @@
 import { ReactComponent as CheckSVG } from '../assets/check.svg'
-type Props = {
-  onChangeFile: (file: File | null) => void;
-  value: File | null;
+interface Props {
+  onChangeFile: (file: File | null) => void
+  value: File | null
 }
 
-export const Dropzone: React.FC<Props> = ({ value, onChangeFile }) => {
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e?.target?.files) {
-      onChangeFile(e.target.files[0]);
+export const Dropzone: React.FC<Props> = ({ value, onChangeFile }: Props): React.ReactElement => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if ((e?.target?.files) != null) {
+      onChangeFile(e.target.files[0])
     }
   }
 
-  const clear = () => {
-    onChangeFile(null);
+  const clear = (): void => {
+    onChangeFile(null)
   }
 
-  return value ?
-    (
+  return (value != null)
+    ? (
       <>
         <div className="flex justify-center items-center w-6/12 mx-auto">
           <div className='flex flex-col w-48 h-48 rounded border-dashed border-2 bg-white'>
@@ -30,8 +30,8 @@ export const Dropzone: React.FC<Props> = ({ value, onChangeFile }) => {
           </div>
         </div>
       </>
-    ) :
-    (
+      )
+    : (
       <>
         <div className="flex justify-center items-center w-6/12 mx-auto">
           <label htmlFor="dropzone-file" className="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
@@ -44,7 +44,5 @@ export const Dropzone: React.FC<Props> = ({ value, onChangeFile }) => {
           </label>
         </div>
       </>
-    )
-
-
+      )
 }

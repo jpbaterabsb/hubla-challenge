@@ -19,13 +19,13 @@ export class Transaction {
   seller: string;
 }
 
-export class FindAllReq {
+export class GetAllTransactionsParams {
   @IsOptional()
   @IsIn(['1', '2'], {})
   group?: string;
 }
 
-export class FindAllRes {
+export class GetAllTransactionsResponse {
   transactions: Transaction[];
   total: any;
 }

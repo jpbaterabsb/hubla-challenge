@@ -5,8 +5,8 @@ import * as router from 'react-router'
 const navigate = jest.fn()
 
 
-describe('LocalTable.tsx', () => {
-    it("render without value", () => {
+describe('NavigationButton.tsx', () => {
+    it("should navigate to home page", () => {
         jest.spyOn(router, 'useNavigate').mockImplementation(() => navigate)
         render(<NavigationButton  label="test" to="/home"/>);
         expect(screen.getByText(/test/i)).toBeInTheDocument();
